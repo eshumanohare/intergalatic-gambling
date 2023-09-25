@@ -75,8 +75,7 @@ contract GalacticaCore is ERC721 {
             return planet1.PyroclasmicCore > planet2.PyroclasmicCore? player1: player2;
         } else if (attribute == 5) {
             return planet1.ZephyrExpanse > planet2.ZephyrExpanse? player1: player2;
-        } else if (attribute == 6) {
-            return planet1.QuantumEnigma > planet2.QuantumEnigma? player1: player2;
-        }
+        } 
+        return planet1.QuantumEnigma > planet2.QuantumEnigma? player1: player2;
     }    
 }
