@@ -13,11 +13,12 @@ module.exports = {
 			colors: {
 				primary: '#171717',
 				secondary: '#14BB00',
+				myred: '#bb0014',
 			},
 			fontFamily: {
 				Handjet: ['Handjet', 'cursive'],
 				Montserrat: ['Montserrat', 'sans-serif'],
-				Josefin:['Josefin Sans','sans-serif']
+				Josefin: ['Josefin Sans', 'sans-serif'],
 			},
 		},
 	},

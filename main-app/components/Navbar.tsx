@@ -13,7 +13,7 @@ const Navbar = ({ setIsConn }) => {
 	}, [isConnected]);
 
 	return (
-		<nav className='w-full flex justify-between items-center p-3 bg-primary'>
+		<nav className='w-full flex justify-between items-center p-3 bg-primary fixed'>
 			<Link href='/'>
 				<img src='/images/logo.png' alt='Logo Image' width={100} />
 			</Link>
