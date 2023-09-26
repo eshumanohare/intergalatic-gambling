@@ -10,8 +10,11 @@ import {
 import { configureChains, createConfig, WagmiConfig } from "wagmi";
 import { sepolia } from "wagmi/chains";
 import { publicProvider } from "wagmi/providers/public";
-
-const { chains, publicClient } = configureChains([sepolia], [publicProvider()]);
+import { OasisSapphireTestnet } from "./Chain";
+const { chains, publicClient } = configureChains(
+  [OasisSapphireTestnet, sepolia],
+  [publicProvider()]
+);
 
 const { connectors } = getDefaultWallets({
   appName: "Vigilante",
