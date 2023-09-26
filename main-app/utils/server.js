@@ -1,9 +1,8 @@
 // server.js
-
 const express = require("express");
 const http = require("http");
 const { Server } = require("socket.io");
-
+const cors = require("cors"); // Import the cors middleware
 const app = express();
 const server = http.createServer(app);
 const io = require("socket.io")(server, {
@@ -11,19 +10,13 @@ const io = require("socket.io")(server, {
     origin: "*",
   },
 });
-const cors = require("cors");
-
-const PORT = process.env.PORT || 3001;
 
 const waitingQueue = [];
 
 // Function to handle matchmaking
 const handleMatchmaking = () => {
   if (waitingQueue.length >= 2) {
-    const [player1, player2] = waitingQueue.splice(
-      Math.floor(Math.random() * waitingQueue.length),
-      2,
-    );
+    const [player1, player2] = waitingQueue.splice(0, 2);
 
     // Simulated room creation (in practice, implement actual room creation logic)
     const roomIdentifier = `room_${Math.random().toString(36).substring(7)}`;
@@ -57,6 +50,6 @@ io.on("connection", (socket) => {
   });
 });
 
-server.listen(PORT, () => {
-  console.log(`Server is running on port ${PORT}`);
+server.listen(3001, () => {
+  console.log(`Server is running on port 3001`);
 });
