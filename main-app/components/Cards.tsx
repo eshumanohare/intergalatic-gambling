@@ -34,6 +34,8 @@ export default function Cards() {
       });
   }, []);
 
+  // FETCH IF NFT IS SOLD
+
   return (
     <ClientOnly>
       <div className="grid grid-cols-1 md:grid-cols-4 gap-4">
