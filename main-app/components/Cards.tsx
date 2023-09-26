@@ -1,7 +1,7 @@
 "use client";
 
 import Card from "./Card";
-import ClientOnly from "../app/clientOnly";
+import ClientOnly from "../utils/clientOnly";
 import { useEffect, useState } from "react";
 
 type Item = {

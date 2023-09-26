@@ -18,7 +18,7 @@ const Navbar = ({ setIsConn }) => {
         <img src="/images/logo.png" alt="Logo Image" width={100} />
       </Link>
 
-      <ConnectButton showBalance={false} />
+      <ConnectButton showBalance={false} chainStatus="none" />
     </nav>
   );
 };

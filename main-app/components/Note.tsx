@@ -1,6 +1,6 @@
 "use client";
 import { useAccount } from "wagmi";
-import ClientOnly from "../app/clientOnly";
+import ClientOnly from "../utils/clientOnly";
 
 export default function Note() {
   const { isConnected } = useAccount();

@@ -4,16 +4,16 @@ import React from "react";
 import {
   RainbowKitProvider,
   getDefaultWallets,
-  darkTheme,
   midnightTheme,
 } from "@rainbow-me/rainbowkit";
 import { configureChains, createConfig, WagmiConfig } from "wagmi";
 import { sepolia } from "wagmi/chains";
 import { publicProvider } from "wagmi/providers/public";
 import { OasisSapphireTestnet } from "./Chain";
+
 const { chains, publicClient } = configureChains(
   [OasisSapphireTestnet, sepolia],
-  [publicProvider()]
+  [publicProvider()],
 );
 
 const { connectors } = getDefaultWallets({
