@@ -5,88 +5,79 @@ pragma solidity ^0.8.9;
 import "@openzeppelin/contracts/token/ERC721/ERC721.sol";
 
 contract GalacticaCore is ERC721 {
-    
     address private watcher;
-    mapping(uint256 => string) private  planetURIs;
     string private baseURI;
-    mapping(uint256 => Planet) private IdToPlanet;
-    uint256 private totalPlanets;
-    bool[] status = new bool[](30);
+    mapping(uint256 => Character) private IdToCharacter;
+    uint256 private totalCharacters;
+    bool[] private status = new bool[](30);
 
-    struct Planet {
-        string name;
-        uint256 EldritchMystique;
-        uint256 AetherialVeil;
-        uint256 NebulaeEmbrace;
-        uint256 ChronoNexus;
-        uint256 PyroclasmicCore;
-        uint256 ZephyrExpanse;
-        uint256 QuantumEnigma;
+    struct Character {
+        uint256 elementalMagic;
+        uint256 lightningStealth;
+        uint256 elementalControl;
+        uint256 timeAndSpace;
+        uint256 celestialSpace;
+        uint256 chaosEnergy;
+        uint256 quantumEnigma;
     }
-
-    event PlanetURISet(uint256 indexed planetID, string indexed planetURI);
 
     constructor() ERC721("Inter-Planetary Gambling", "GIP") {
         watcher = msg.sender;
     }
 
-    function mintPlanets(string[] calldata _planetURIs, Planet[] calldata planets) external {
-        require(msg.sender == watcher, "Error: Not allowed to mint planets");
-        require(_planetURIs.length == planets.length, "Error: Mismatch in number of planets and URI");
-        for(uint256 i = 0; i < planets.length; i++) {
-            _mint(watcher, i);
-            setPlanet(i, _planetURIs[i], planets[i]);
-            totalPlanets += 1;
-        }
-    }
-
-    function setBaseURI(string calldata _baseURI) external {
-        require(msg.sender == watcher, "Error: Not allowed to set base uri");
+    function setBaseURI(string calldata _baseURI) external watcherOnly {
         baseURI = _baseURI;
     }
 
-    function setPlanet(uint256 planetID, string calldata planetURI, Planet calldata planet) internal {
-        require(_exists(planetID), "Error: Planet already minted");
-        planetURIs[planetID] = planetURI;
-        IdToPlanet[planetID] = planet;
-        emit PlanetURISet(planetID, planetURI);
+    function setCharacter(uint256 characterID, Character calldata character) external watcherOnly {
+        IdToCharacter[characterID] = character;
+        totalCharacters += 1;
     }
 
-    function planetWar(address player1, address player2, uint256 planetID1, uint256 planetID2, uint256 attribute) external view returns (address winner) {
-        require(msg.sender == watcher, "Error: War can be initiated by the watcher only");
-        require(ownerOf(planetID1) == player1,"Error: Buy the Planet first");
-        require(ownerOf(planetID2) == player2, "Error: Buy the Planet first");
-        require(player1 != address(0) && player2 != address(0) && (planetID1 >= 0 && planetID1 <= totalPlanets) && (planetID2 >= 0 && planetID2 <= totalPlanets), "Error: Invalid Player details");
+    function mintCharacter(uint256 characterID) external {
+        require(!_exists(characterID), "Error: Character is already minted");
+        _mint(msg.sender, characterID);
+        status[characterID] = true; // true means the character is minted to some player
+    }
+
+    function characterWar(address player1, address player2, uint256 characterID1, uint256 characterID2, uint256 attribute) external view watcherOnly returns (address winner) {
+        require(ownerOf(characterID1) == player1,"Error: Mint the Character first");
+        require(ownerOf(characterID2) == player2, "Error: Mint the Character first");
+        require(player1 != address(0) && player2 != address(0) && (characterID1 >= 0 && characterID1 <= totalCharacters) && (characterID2 >= 0 && characterID2 <= totalCharacters), "Error: Invalid Player details");
         require(attribute < 7, "Error: Attribute index is wrong");
 
-        Planet memory planet1 = IdToPlanet[planetID1];
-        Planet memory planet2 = IdToPlanet[planetID2];
+        Character memory character1 = IdToCharacter[characterID1];
+        Character memory character2 = IdToCharacter[characterID2];
 
-        if(planetID1 == planetID2) {
-            return address(0);
+        if(characterID1 == characterID2) {
+            return address(0); // both players chose the same NFT
         }
 
         if(attribute == 0) {
-            return planet1.EldritchMystique > planet2.EldritchMystique? player1: player2;
+            return character1.elementalMagic > character2.elementalMagic? player1: player2;
         } else if (attribute == 1) {
-            return planet1.AetherialVeil > planet2.AetherialVeil? player1: player2;
+            return character1.lightningStealth > character2.lightningStealth? player1: player2;
         } else if (attribute == 2) {
-            return planet1.NebulaeEmbrace > planet2.NebulaeEmbrace? player1: player2;
+            return character1.elementalControl > character2.elementalControl? player1: player2;
         } else if (attribute == 3) {
-            return planet1.ChronoNexus > planet2.ChronoNexus? player1: player2;
+            return character1.timeAndSpace > character2.timeAndSpace? player1: player2;
         } else if (attribute == 4) {
-            return planet1.PyroclasmicCore > planet2.PyroclasmicCore? player1: player2;
+            return character1.celestialSpace > character2.celestialSpace? player1: player2;
         } else if (attribute == 5) {
-            return planet1.ZephyrExpanse > planet2.ZephyrExpanse? player1: player2;
+            return character1.chaosEnergy > character2.chaosEnergy? player1: player2;
         }
-        
-        return planet1.QuantumEnigma > planet2.QuantumEnigma? player1: player2;
+        return character1.quantumEnigma > character2.quantumEnigma? player1: player2;
     }
 
-    function setStatus(uint256 planetID) external {
-        require(msg.sender == watcher, "Error: Not allowed to set status");
-        status[planetID] = true;
+    // modifiers
+
+    modifier watcherOnly {
+        require(msg.sender == watcher, "Error: Not allowed to carry out this operation");
+        _;
     }
+
+    // getters
+
     function getStatus() external view returns (bool[] memory) {
         return status;
     }
