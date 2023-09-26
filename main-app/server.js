@@ -22,7 +22,7 @@ const handleMatchmaking = () => {
   if (waitingQueue.length >= 2) {
     const [player1, player2] = waitingQueue.splice(
       Math.floor(Math.random() * waitingQueue.length),
-      2
+      2,
     );
 
     // Simulated room creation (in practice, implement actual room creation logic)
@@ -32,7 +32,7 @@ const handleMatchmaking = () => {
     io.to(player1).to(player2).emit("match", { roomIdentifier });
 
     console.log(
-      `Matched players: ${player1} and ${player2}\nRoom: ${roomIdentifier}`
+      `Matched players: ${player1} and ${player2}\nRoom: ${roomIdentifier}`,
     );
   }
 };
