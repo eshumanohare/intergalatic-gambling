@@ -5,52 +5,22 @@ import { useAccount } from "wagmi";
 import ClientOnly from "../../utils/clientOnly";
 import { useRouter } from "next/navigation";
 import { io, type Socket } from "socket.io-client";
+
+import type { ChangeEvent } from "react";
+
 import type {
   ServerToClientEvents,
   ClientToServerEvents,
 } from "../../utils/socketCustomTypes";
 
-let socket: Socket<ServerToClientEvents, ClientToServerEvents> | null = null;
+let socket: undefined | Socket;
 
 export default function Lobby({}) {
   const { isConnected } = useAccount();
   const router = useRouter();
 
-  // Putting the player into the waiting queue using socket.io
   useEffect(() => {
-    if (!socket) {
-      void fetch("/api/socket");
-      socket = io();
-
-      socket.on("connect", () => {
-        console.log("connected");
-      });
-
-      socket.on("hello", (msg: string) => {
-        console.log("hello", msg);
-      });
-
-      socket.on("userServerConnection", () => {
-        console.log("a user connected (client)");
-      });
-
-      socket.on("userServerDisconnection", (socketid: string) => {
-        console.log(socketid);
-      });
-    }
-    // const socket = io("/api/socket");
-
-    // socket.on("connect", () => {
-    //   console.log("You are connected to the server");
-    // });
-
-    // if (address) {
-    //   socket.on("match", ({ roomIdentifier }) => {
-    //     // Handle the match event here, e.g., navigate to the room
-    //     console.log(`Matched with room: ${roomIdentifier}`);
-    //     router.push(`/room/${roomIdentifier}`);
-    //   });
-    // }
+    socketInitializer();
 
     return () => {
       if (socket) {
@@ -59,6 +29,29 @@ export default function Lobby({}) {
       }
     };
   }, []);
+
+  const socketInitializer = async () => {
+    // fetch("/api/socket");
+    socket = io("/api/socket");
+
+    socket.on("connect", () => {
+      console.log("connected");
+    });
+
+    socket.on("hello", (msg: string) => {
+      console.log("hello", msg);
+    });
+
+    socket.on("userServerConnection", () => {
+      console.log("a user connected (client)");
+    });
+
+    socket.on("userServerDisconnection", (socketid: string) => {
+      console.log(socketid);
+    });
+
+    socket.on("update-input", (msg) => {});
+  };
 
   // process
   // 1 - find NftId if not given using get req
