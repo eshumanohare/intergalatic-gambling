@@ -10,6 +10,7 @@ contract GalacticaCore is ERC721 {
     mapping(uint256 => Character) private IdToCharacter;
     uint256 private totalCharacters;
     bool[] private status = new bool[](30);
+    mapping(address => uint256) private addressToID;
 
     struct Character {
         uint256 elementalMagic;
@@ -38,6 +39,7 @@ contract GalacticaCore is ERC721 {
         require(!_exists(characterID), "Error: Character is already minted");
         _mint(msg.sender, characterID);
         status[characterID] = true; // true means the character is minted to some player
+        addressToID[msg.sender] = characterID;
     }
 
     function characterWar(address player1, address player2, uint256 characterID1, uint256 characterID2, uint256 attribute) external view watcherOnly returns (address winner) {
@@ -80,5 +82,13 @@ contract GalacticaCore is ERC721 {
 
     function getStatus() external view returns (bool[] memory) {
         return status;
+    }
+
+    function getIDFromAddress(address playerAddress) external view returns (uint256) {
+        return addressToID[playerAddress];
+    }
+
+    function getBaseURI() external view returns (string memory) {
+        return baseURI;
     }
 }
