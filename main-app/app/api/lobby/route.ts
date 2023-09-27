@@ -1,7 +1,23 @@
-import { NextApiRequest, NextApiResponse } from "next";
 import { createRedisInstance } from "../../../utils/redisConfig";
+import { Server } from "socket.io";
 
-export async function GET(Request: NextApiRequest) {
+// TODO: clean up here, most functionality here is present in socket.ts file
+export async function GET(request: Request) {
+  const { searchParams } = new URL(request.url);
+  const addr = searchParams.get("address");
+
+  console.log(addr);
+
+  //TODO: make a call to the blockchain
+
+  return new Response(
+    JSON.stringify({
+      tokenId: 1,
+    }),
+  );
+}
+
+export async function POST(request: Request) {
   const redis = createRedisInstance();
   const key = getRandomKey();
 
