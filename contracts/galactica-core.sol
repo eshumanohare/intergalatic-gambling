@@ -9,7 +9,7 @@ contract GalacticaCore is ERC721 {
     string private baseURI;
     mapping(uint256 => Character) private IdToCharacter;
     uint256 private totalCharacters;
-    bool[] private status = new bool[](30);
+    bool[] private status = new bool[](31);
     mapping(address => uint256) private addressToID;
 
     struct Character {
@@ -45,7 +45,7 @@ contract GalacticaCore is ERC721 {
     function characterWar(address player1, address player2, uint256 characterID1, uint256 characterID2, uint256 attribute) external view watcherOnly returns (address winner) {
         require(ownerOf(characterID1) == player1,"Error: Mint the Character first");
         require(ownerOf(characterID2) == player2, "Error: Mint the Character first");
-        require(player1 != address(0) && player2 != address(0) && (characterID1 >= 0 && characterID1 <= totalCharacters) && (characterID2 >= 0 && characterID2 <= totalCharacters), "Error: Invalid Player details");
+        require(player1 != address(0) && player2 != address(0) && (characterID1 > 0 && characterID1 <= totalCharacters) && (characterID2 > 0 && characterID2 <= totalCharacters), "Error: Invalid Player details");
         require(attribute < 7, "Error: Attribute index is wrong");
 
         Character memory character1 = IdToCharacter[characterID1];
